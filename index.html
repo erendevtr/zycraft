@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zycraft · play.zycraft.fdom.space</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
+
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #020617;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(99, 102, 241, 0.1), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 60%, rgba(139, 92, 246, 0.08), transparent),
+        linear-gradient(180deg, #020617 0%, #0a0f1e 50%, #020617 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 100%);
+    }
+
+    .leader-glow {
+      box-shadow:
+        0 0 0 1px rgba(96, 165, 250, 0.08),
+        0 25px 80px -20px rgba(0, 0, 0, 0.95),
+        0 0 100px -20px rgba(59, 130, 246, 0.2);
+    }
+
+    .server-card {
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+      backdrop-filter: blur(24px) saturate(150%);
+      -webkit-backdrop-filter: blur(24px) saturate(150%);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .server-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.8), transparent);
+    }
+
+    .server-card:hover {
+      border-color: rgba(96, 165, 250, 0.5);
+      box-shadow:
+        0 0 0 1px rgba(96, 165, 250, 0.2),
+        0 30px 90px -20px rgba(0, 0, 0, 0.95),
+        0 0 120px -20px rgba(59, 130, 246, 0.4);
+      transform: translateY(-8px);
+    }
+
+    .ip-pill {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      border-radius: 9999px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #93c5fd;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 4px 15px -5px rgba(0, 0, 0, 0.8);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .ip-pill:hover {
+      border-color: rgba(96, 165, 250, 0.8);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 25px -5px rgba(59, 130, 246, 0.6);
+      transform: scale(1.02);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 12px #22c55e, 0 0 24px rgba(34, 197, 94, 0.6);
+      margin-right: 8px;
+      animation: pulse-dot 2s infinite;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .status-dot.offline {
+      background: #ef4444;
+      box-shadow: 0 0 12px #ef4444, 0 0 24px rgba(239, 68, 68, 0.6);
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .feature-card {
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 24px;
+      padding: 2rem;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(96, 165, 250, 0.1), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(96, 165, 250, 0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.9);
+    }
+
+    .feature-icon {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      color: #60a5fa;
+      font-size: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1) rotate(-5deg);
+      border-color: rgba(96, 165, 250, 0.6);
+      color: #bfdbfe;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 30px -5px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%);
+      border: 1px solid rgba(96, 165, 250, 0.6);
+      color: white;
+      font-weight: 700;
+      border-radius: 9999px;
+      padding: 0.85rem 2.2rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 12px 35px -10px rgba(37, 99, 235, 0.8);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transform: skewX(-25deg);
+      transition: left 0.7s;
+      z-index: -1;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 18px 45px -10px rgba(59, 130, 246, 0.9);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #e2e8f0;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.85rem 2.2rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(96, 165, 250, 0.8);
+      background: rgba(59, 130, 246, 0.15);
+      color: #bfdbfe;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px -15px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-outline:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .glass-nav {
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border-bottom: 1px solid rgba(96, 165, 250, 0.1);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    .discord-badge {
+      background: linear-gradient(135deg, #5865F2, #4752c4);
+      border: 1px solid rgba(138, 145, 255, 0.4);
+      border-radius: 100px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px -5px rgba(88, 101, 242, 0.6);
+    }
+
+    .discord-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -5px rgba(88, 101, 242, 0.8);
+      filter: brightness(1.15);
+    }
+
+    .nav-link {
+      position: relative;
+      padding: 0.25rem 0;
+      transition: color 0.3s;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .brand-gradient {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(96, 165, 250, 0.3);
+    }
+
+    .stat-item {
+      position: relative;
+      padding-left: 1rem;
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 15%;
+      height: 70%;
+      width: 3px;
+      background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .stat-value {
+      background: linear-gradient(135deg, #ffffff, #93c5fd);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-banner {
+      background:
+        radial-gradient(ellipse at top right, rgba(59, 130, 246, 0.25), transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(139, 92, 246, 0.2), transparent 50%),
+        linear-gradient(135deg, #0a0f1e 0%, #111827 50%, #0a0f1e 100%);
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.8), transparent);
+    }
+
+    .hero-badge {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s;
+    }
+
+    .ip-display {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .copy-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .copy-btn:hover {
+      color: #60a5fa;
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.9);
+    }
+
+    .brand-logo {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 10px 30px -5px rgba(59, 130, 246, 0.6);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(15px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .animate-modal {
+      animation: modalIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .blur-guard {
+      filter: blur(25px) !important;
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+
+    .rules-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .rules-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+    }
+    .rules-scroll::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      border-radius: 10px;
+    }
+    .rules-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.8);
+    }
+
+    .launcher-option {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .launcher-option:hover:not(.locked) {
+      border-color: rgba(96, 165, 250, 0.6);
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 1));
+      transform: translateX(6px);
+      box-shadow: 0 12px 30px -10px rgba(59, 130, 246, 0.5);
+    }
+
+    .launcher-option.locked {
+      cursor: not-allowed;
+      opacity: 0.5;
+      filter: grayscale(0.8);
+    }
+
+    .launcher-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      flex-shrink: 0;
+      transition: all 0.3s;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .launcher-option:not(.locked):hover .launcher-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .launcher-icon.windows { background: linear-gradient(135deg, #0078d4, #005a9e); }
+    .launcher-icon.linux { background: linear-gradient(135deg, #f9a825, #e65100); }
+    .launcher-icon.mac { background: linear-gradient(135deg, #a1a1a6, #48484a); }
+
+    .launcher-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .launcher-badge.available {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+
+    .launcher-badge.locked-badge {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .launcher-lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.5);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="text-slate-200 antialiased flex flex-col min-h-screen relative">
+
+  <div id="devtools-block" class="hidden fixed inset-0 z-[99999] bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+    <div class="w-20 h-20 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center mb-6">
+      <i class="fa-solid fa-shield-halved text-red-400 text-3xl"></i>
+    </div>
+    <h2 class="text-2xl font-extrabold text-white mb-2">Erişim Engellendi</h2>
+    <p class="text-slate-400 max-w-md">Geliştirici araçları tespit edildi. Lütfen sekmeyi kapatıp tekrar deneyin.</p>
+  </div>
+
+  <div id="rules-modal" class="hidden fixed inset-0 z-[10000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    <div class="animate-modal bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-700/60 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between p-6 border-b border-slate-800">
+        <h2 class="text-xl font-bold text-white flex items-center gap-3">
+          <i class="fa-solid fa-scroll text-blue-400"></i> Zycraft Kuralları
+        </h2>
+        <button id="close-rules-btn" class="text-slate-400 hover:text-red-400 transition text-xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto rules-scroll text-slate-300 space-y-4 text-sm leading-relaxed flex-1">
+        <p><strong class="text-white">1. Genel Davranış:</strong> Tüm oyuncular birbirine saygılı olmalıdır. Hakaret, ırkçılık, ayrımcılık ve küfür kesinlikle yasaktır.</p>
+        <p><strong class="text-white">2. Hile ve Modlar:</strong> X-Ray, KillAura, Fly, Reach gibi hileler ve adil olmayan modlar yasaktır. İzin verilen modlar sadece kozmetik ve optimizasyon modlarıdır (Sodium, OptiFine vb.).</p>
+        <p><strong class="text-white">3. Reklam:</strong> Sohbette veya tabelalarda diğer sunucuların reklamını yapmak yasaktır. Kendi kişisel sosyal medya hesaplarınızı paylaşabilirsiniz.</p>
+        <p><strong class="text-white">4. Dolandırıcılık:</strong> Oyuncular arası ticarette dolandırıcılık yasaktır. Anlaşmalara uyulmalıdır. Yetkililer anlaşmazlıklarda sorumluluk kabul etmez.</p>
+        <p><strong class="text-white">5. Bug Kullanımı:</strong> Oyun içi hataları (bug) kullanarak haksız kazanç sağlamak yasaktır. Bulduğunuz hataları derhal yetkililere bildirmelisiniz.</p>
+        <p><strong class="text-white">6. Yetkili İletişimi:</strong> Yetkililere saygısızlık yapılamaz. Yetkililerin kararları tartışmaya açık değildir, itirazlarınızı Discord üzerinden iletebilirsiniz.</p>
+        <p><strong class="text-white">7. Hesap Güvenliği:</strong> Hesap şifrenizi kimseyle paylaşmayın. Hesap güvenliğinden tamamen siz sorumlusunuz.</p>
+        <p><strong class="text-white">8. Spam & Flood:</strong> Sohbette spam yapmak, büyük harf kullanmak (Caps Lock) ve flood yapmak susturulma cezası ile sonuçlanır.</p>
+        <p><strong class="text-white">9. Kişisel Bilgiler:</strong> Diğer oyuncuların kişisel bilgilerini (IP, adres, gerçek isim vb.) izinsiz paylaşmak kesinlikle yasaktır ve kalıcı yasaklama sebebidir.</p>
+        <p><strong class="text-white">10. AFK:</strong> AFK (Away From Keyboard) kalarak otomatik para veya XP kazanmak yasaktır. AFK makinesi kullananlar cezalandırılır.</p>
+        <p class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800">Bu kurallar önceden haber verilmeksizin güncellenebilir. Sunucuya giriş yapan her oyuncu bu kuralları kabul etmiş sayılır.</p>
+      </div>
+      <div class="p-6 border-t border-slate-800 flex justify-end">
+        <button id="accept-rules-btn" class="btn-primary px-8">Okudum, Anladım</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="launcher-modal" class="hidden fixed inset-0 z-[10000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    <div class="animate-modal bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-700/60 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between p-6 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl brand-logo flex items-center justify-center">
+            <i class="fa-solid fa-download text-white text-sm"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-white leading-tight">Zycraft Launcher</h2>
+            <p class="text-xs text-slate-400">İşletim sistemini seç</p>
+          </div>
+        </div>
+        <button id="close-launcher-btn" class="text-slate-400 hover:text-red-400 transition text-xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="launcher-options-container" class="p-6 space-y-3 overflow-y-auto rules-scroll"></div>
+      <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+        <p class="text-[11px] text-slate-500 text-center leading-relaxed">
+          <i class="fa-solid fa-circle-info text-blue-400 mr-1"></i>
+          Zycraft Launcher yakında kullanıma sunulacaktır. Şimdilik IP üzerinden bağlanabilirsiniz.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="glass-nav sticky top-0 z-50 w-full">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div id="nav-brand" class="flex items-center gap-3"></div>
+      <div id="nav-links" class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300"></div>
+      <div id="nav-mobile" class="md:hidden flex items-center gap-2"></div>
+    </div>
+  </nav>
+
+  <header id="hero-header" class="max-w-7xl mx-auto px-6 pt-16 pb-8 md:pt-24 md:pb-12 w-full"></header>
+
+  <section id="features-section" class="max-w-7xl mx-auto px-6 py-12 md:py-20"></section>
+
+  <section id="community-section" class="max-w-7xl mx-auto px-6 pb-20 animate-in">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-4xl font-extrabold text-white flex items-center justify-center gap-3 tracking-tight">
+        <i class="fa-brands fa-discord text-indigo-400"></i> Topluluğumuza Katıl
+      </h2>
+      <p class="text-slate-400 mt-3 text-sm md:text-base max-w-lg mx-auto">Canlı sohbetimize göz at, sorularını sor, yeni arkadaşlar edin.</p>
+    </div>
+    <div class="bg-[#2b2d31] rounded-3xl overflow-hidden shadow-2xl border border-slate-700/50 max-w-4xl mx-auto">
+      <iframe src="https://discord.com/widget?id=123456789012345678&theme=dark" width="100%" height="400" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" class="w-full"></iframe>
+    </div>
+  </section>
+
+  <section id="cta-section" class="max-w-7xl mx-auto px-6 pb-20"></section>
+
+  <footer id="site-footer" class="border-t border-slate-800/80 py-10 mt-auto backdrop-blur-sm"></footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const currentYear = new Date().getFullYear();
+
+      const CONFIG = {
+        ip: 'play.zycraft.fdom.space',
+        brand: 'Zycraft',
+        version: '1.20.4',
+        discord: 'https://discord.gg/NuxbbJ7xN8',
+        vote: 'https://minecraft-mp.com',
+        discordWidgetId: '1570795836063875102'
+      };
+
+      const LAUNCHER_CONFIG = {
+        windows: { available: false, url: '#', icon: 'fa-brands fa-windows', color: 'windows' },
+        linux: { available: false, url: '#', icon: 'fa-brands fa-linux', color: 'linux' },
+        mac: { available: false, url: '#', icon: 'fa-brands fa-apple', color: 'mac' }
+      };
+
+      const heroState = {
+        badge: 'SUNUCU AKTİF · ' + CONFIG.version,
+        titleTop: CONFIG.brand,
+        titleBottom: 'Efsanelerin Doğduğu Yer',
+        description: 'Kaliteli bir Minecraft deneyimi. Özel eşyalar, savaşlar, ekonomi ve dostluk dolu bir dünya. Tamamen ücretsiz, herkese açık.',
+        primaryBtn: 'Hemen Oyna',
+        secondaryBtn: 'IP Kopyala',
+        serverStatus: 'ÇEVRİMİÇİ',
+        serverStatusLabel: 'Sunucu Durumu',
+        ipLabel: 'Sunucu IP',
+        playerLabel: 'Oyuncu',
+        versionLabel: 'Sürüm',
+        joinBtn: 'Sunucuya Katıl',
+        editionNote: 'Java Sürümü · 1.16.5 – ' + CONFIG.version
+      };
+
+      const features = [
+        { icon: 'fa-gem', title: 'Özel Eşyalar', desc: 'Sunucuya özel büyülü eşyalar, setler ve benzersiz yetenekler. Hepsi ücretsiz kazanılabilir.' },
+        { icon: 'fa-trophy', title: 'Rütbe Sistemi', desc: 'Tamamen oyun içi başarılarla kazanılan rütbeler, ayrıcalıklar ve prestijli unvanlar.' },
+        { icon: 'fa-coins', title: 'Gelişmiş Ekonomi', desc: 'Pazar yeri, açık artırma ve oyuncu dükkanları ile tamamen oyun içi zenginleş.' },
+        { icon: 'fa-users', title: 'Aktif Topluluk', desc: 'Discord etkinlikleri, turnuvalar ve dost canlısı oyuncular. Herkes davetli.' },
+        { icon: 'fa-crown', title: 'Kozmetikler', desc: 'Oyun içi etkinlikler ve başarılarla kazanılan havalı kozmetikler ve kostümler.' }
+      ];
+
+      const navLinks = [
+        { label: 'Ana Sayfa', href: '#', action: 'home' },
+        { label: 'Oy Ver', href: CONFIG.vote, action: 'vote', external: true }
+      ];
+
+      async function fetchServerStatus() {
+        const playerEl = document.getElementById('live-player-count');
+        const heroOnlineEl = document.getElementById('hero-live-online');
+        const versionEl = document.getElementById('live-server-version');
+        const ctaVersionEl = document.getElementById('cta-live-version');
+        const ctaVersionContainer = document.getElementById('cta-version-container'); // Yeni eklendi
+        const statusBadge = document.getElementById('live-status-badge');
+        const statusDot = document.getElementById('live-status-dot');
+        const motdEl = document.getElementById('live-motd');
+        const pingEl = document.getElementById('live-ping');
+        const heroBadgeEl = document.getElementById('hero-badge-text');
+        const heroDot = document.querySelector('.status-dot'); // Üstteki yeşil nokta
+
+        try {
+          const res = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.ip}`);
+          const data = await res.json();
+          
+          if (data.online) {
+            const currentPlayers = data.players.online;
+            
+            if(playerEl) playerEl.innerHTML = `${currentPlayers}<span class="text-sm font-normal text-slate-500">/${data.players.max}</span>`;
+            if(heroOnlineEl) heroOnlineEl.textContent = currentPlayers >= 1000 ? (currentPlayers/1000).toFixed(1) + 'K+' : currentPlayers;
+            
+            if(versionEl) versionEl.textContent = data.version;
+            if(ctaVersionEl) ctaVersionEl.textContent = data.version;
+            if(heroBadgeEl) heroBadgeEl.textContent = 'SUNUCU AKTİF · ' + data.version;
+            
+            // Sunucu açıksa yeşil nokta ve sürüm alanı
+            if(heroDot) heroDot.classList.remove('offline');
+            if(ctaVersionContainer) ctaVersionContainer.style.display = 'flex'; // Sürüm alanını göster
+
+            if(motdEl && data.motd && data.motd.clean) {
+              motdEl.textContent = data.motd.clean.join(' ');
+              motdEl.classList.remove('hidden');
+            }
+            if(pingEl && data.debug && data.debug.ping) {
+              pingEl.textContent = data.debug.ping + 'ms';
+              pingEl.classList.remove('hidden');
+            }
+
+            if(statusBadge) {
+              statusBadge.textContent = 'ÇEVRİMİÇİ';
+              statusBadge.className = 'text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full font-bold border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+            }
+            if(statusDot) {
+              statusDot.className = 'w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_12px_#22c55e]';
+            }
+          } else {
+            if(playerEl) playerEl.innerHTML = `0<span class="text-sm font-normal text-slate-500">/0</span>`;
+            if(heroOnlineEl) heroOnlineEl.textContent = '0';
+            if(versionEl) versionEl.textContent = 'Kapalı';
+            if(ctaVersionEl) ctaVersionEl.textContent = 'Kapalı';
+            if(heroBadgeEl) heroBadgeEl.textContent = 'SUNUCU KAPALI';
+            if(motdEl) motdEl.classList.add('hidden');
+            if(pingEl) pingEl.classList.add('hidden');
+            
+            // Sunucu kapalıysa kırmızı nokta ve sürüm alanını gizle
+            if(heroDot) heroDot.classList.add('offline');
+            if(ctaVersionContainer) ctaVersionContainer.style.display = 'none'; // Sürüm alanını gizle
+
+            if(statusBadge) {
+              statusBadge.textContent = 'ÇEVRİMDIŞI';
+              statusBadge.className = 'text-xs bg-red-500/20 text-red-300 px-3 py-1 rounded-full font-bold border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
+            }
+            if(statusDot) {
+              statusDot.className = 'w-3 h-3 rounded-full bg-red-400 shadow-[0_0_12px_#ef4444]';
+            }
+          }
+        } catch (error) {
+          console.warn('API hatası, varsayılan veriler kullanılıyor.');
+          if(playerEl) playerEl.innerHTML = `1.248<span class="text-sm font-normal text-slate-500">/2000</span>`;
+          if(heroOnlineEl) heroOnlineEl.textContent = '1.2K+';
+          if(versionEl) versionEl.textContent = CONFIG.version;
+          if(ctaVersionEl) ctaVersionEl.textContent = CONFIG.version;
+          if(heroBadgeEl) heroBadgeEl.textContent = 'SUNUCU AKTİF · ' + CONFIG.version;
+          if(heroDot) heroDot.classList.remove('offline');
+          if(ctaVersionContainer) ctaVersionContainer.style.display = 'flex';
+        }
+      }
+
+      function buildNavBrand() {
+        const el = document.getElementById('nav-brand');
+        el.innerHTML = `
+          <div class="w-10 h-10 rounded-xl brand-logo flex items-center justify-center">
+            <i class="fa-solid fa-cube text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-extrabold tracking-tight brand-gradient">${CONFIG.brand}</h1>
+            <p class="text-[10px] text-slate-400 -mt-0.5 tracking-wider font-medium">${CONFIG.ip}</p>
+          </div>
+        `;
+      }
+
+      function buildNavLinks() {
+        const el = document.getElementById('nav-links');
+        el.innerHTML = navLinks.map(link => `
+          <a href="${link.href}" data-nav-action="${link.action}" ${link.external ? 'target="_blank" rel="noopener"' : ''} class="nav-link hover:text-blue-400 transition-colors duration-300">${link.label}</a>
+        `).join('') + `
+          <div class="ip-pill flex items-center gap-2 text-xs md:text-sm" data-copy-ip>
+            <i class="fa-regular fa-copy text-blue-400"></i>
+            <span>${CONFIG.ip}</span>
+          </div>
+          <a href="${CONFIG.discord}" target="_blank" rel="noopener" class="discord-badge text-white flex items-center gap-2">
+            <i class="fa-brands fa-discord"></i> Discord
+          </a>
+        `;
+      }
+
+      function buildNavMobile() {
+        const el = document.getElementById('nav-mobile');
+        el.innerHTML = `
+          <div class="ip-pill text-[10px] px-3 py-1" data-copy-ip>${CONFIG.ip}</div>
+          <button id="mobile-menu-btn" class="text-xl text-slate-400 hover:text-blue-400 transition">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        `;
+      }
+
+      function buildHero() {
+        const el = document.getElementById('hero-header');
+        el.innerHTML = `
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-10">
+            <div class="lg:w-1/2 text-center lg:text-left animate-in">
+              <div class="hero-badge inline-flex items-center rounded-full px-5 py-2 text-[11px] font-bold tracking-wider text-blue-300 mb-8 uppercase">
+                <span class="status-dot"></span><span id="hero-badge-text">${heroState.badge}</span>
+              </div>
+              <h1 class="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight">
+                <span class="brand-gradient">${heroState.titleTop}</span><br />
+                <span class="text-slate-100 text-3xl md:text-5xl font-extrabold mt-2 block tracking-tight">${heroState.titleBottom}</span>
+              </h1>
+              <p class="text-slate-400 text-base md:text-lg mt-6 max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
+                ${heroState.description}
+              </p>
+              <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-10">
+                <button class="btn-primary flex items-center gap-3 text-lg" data-action="play">
+                  <i class="fa-solid fa-play"></i>${heroState.primaryBtn}
+                </button>
+                <button class="btn-outline flex items-center gap-3 text-lg" data-action="copy-ip">
+                  <i class="fa-regular fa-clipboard"></i>${heroState.secondaryBtn}
+                </button>
+              </div>
+              
+              <div class="flex flex-wrap gap-8 mt-12 justify-center lg:justify-start">
+                <div class="stat-item text-left">
+                  <div id="hero-live-online" class="text-3xl font-black stat-value tracking-tight">...</div>
+                  <div class="text-slate-500 text-xs uppercase tracking-widest font-bold mt-1">Çevrimiçi</div>
+                </div>
+                <div class="stat-item text-left">
+                  <div class="text-3xl font-black stat-value tracking-tight">7/24</div>
+                  <div class="text-slate-500 text-xs uppercase tracking-widest font-bold mt-1">Kesintisiz</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="lg:w-1/2 w-full max-w-md mx-auto animate-in" style="animation-delay: 0.2s">
+              <div class="server-card rounded-[2rem] p-8 leader-glow">
+                <div class="flex items-center justify-between border-b border-slate-700/60 pb-5 mb-5">
+                  <div class="flex items-center gap-3">
+                    <div id="live-status-dot" class="w-3 h-3 rounded-full bg-slate-600 shadow-[0_0_12px_#475569]"></div>
+                    <span class="text-sm font-bold text-slate-200 tracking-wide">${heroState.serverStatusLabel}</span>
+                  </div>
+                  <span id="live-status-badge" class="text-[10px] bg-slate-700 text-slate-300 px-3 py-1 rounded-full font-bold tracking-wider border border-slate-600 uppercase">YÜKLENİYOR</span>
+                </div>
+                <div class="ip-display rounded-2xl p-5 mb-5 group relative overflow-hidden">
+                  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">${heroState.ipLabel}</p>
+                  <div class="flex items-center justify-between gap-3 relative z-10">
+                    <code class="text-lg md:text-xl font-mono font-bold text-blue-300 break-all">${CONFIG.ip}</code>
+                    <button class="copy-btn text-slate-400 flex-shrink-0 p-2 rounded-lg hover:bg-slate-700/50" data-copy-ip title="Kopyala">
+                      <i class="fa-regular fa-copy text-xl"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                  <div class="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 shadow-inner flex flex-col justify-between">
+                    <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">${heroState.playerLabel}</p>
+                    <p id="live-player-count" class="text-2xl font-black text-white tracking-tight">...</p>
+                  </div>
+                  <div class="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 shadow-inner flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-1">
+                      <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">${heroState.versionLabel}</p>
+                      <span id="live-ping" class="hidden text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded"></span>
+                    </div>
+                    <p id="live-server-version" class="text-xl font-bold text-white truncate">...</p>
+                  </div>
+                </div>
+                
+                <div id="live-motd" class="hidden text-center text-xs text-slate-400 mb-4 px-2 font-mono leading-relaxed overflow-hidden text-ellipsis line-clamp-2"></div>
+
+                <button class="btn-primary w-full flex items-center justify-center gap-3 text-lg py-4" data-action="join">
+                  <i class="fa-solid fa-arrow-right-to-bracket"></i>${heroState.joinBtn}
+                </button>
+                <p class="text-[11px] text-slate-500 text-center mt-4 font-medium tracking-wide">${heroState.editionNote}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function buildFeatures() {
+        const el = document.getElementById('features-section');
+        el.innerHTML = `
+          <div class="text-center mb-16 animate-in">
+            <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight">
+              Neden <span class="brand-gradient">${CONFIG.brand}</span>?
+            </h2>
+            <p class="text-slate-400 max-w-2xl mx-auto mt-4 text-base md:text-lg font-medium">
+              Kaliteli altyapı, özel içerikler ve aktif topluluk. Tamamen ücretsiz.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            ${features.map((f, i) => `
+              <div class="feature-card animate-in" style="animation-delay: ${0.1 * i}s">
+                <div class="feature-icon mb-6">
+                  <i class="fa-solid ${f.icon}"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3 tracking-tight">${f.title}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed font-medium">${f.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function buildCta() {
+        const el = document.getElementById('cta-section');
+        el.innerHTML = `
+          <div class="cta-banner rounded-[2rem] p-10 md:p-14 shadow-2xl animate-in">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div class="text-center md:text-left">
+                <h3 class="text-3xl md:text-4xl font-black text-white tracking-tight">Hemen katıl, efsane ol!</h3>
+                <div class="text-slate-300 mt-4 max-w-lg text-base font-medium flex flex-col gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-slate-400">Sunucu IP:</span>
+                    <span class="font-mono font-bold text-blue-300 bg-slate-900/50 px-3 py-1 rounded-lg border border-slate-700/50 flex items-center gap-2">
+                      ${CONFIG.ip} <i class="fa-regular fa-copy cursor-pointer hover:text-white transition-colors" data-copy-ip></i>
+                    </span>
+                  </div>
+                  <div id="cta-version-container" class="flex items-center gap-2">
+                    <span class="text-slate-400">Sürüm:</span>
+                    <span class="text-white">Java 1.8 - <span id="cta-live-version">${CONFIG.version}</span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-4 justify-center">
+                <button class="btn-primary flex items-center gap-3 whitespace-nowrap text-lg" data-action="play">
+                  <i class="fa-solid fa-rocket"></i>Oyna
+                </button>
+                <a href="${CONFIG.discord}" target="_blank" rel="noopener" class="btn-outline flex items-center gap-3 whitespace-nowrap text-lg">
+                  <i class="fa-brands fa-discord"></i>Discord
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function buildFooter() {
+        const el = document.getElementById('site-footer');
+        el.innerHTML = `
+          <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-500 font-medium">
+            <div class="flex items-center gap-4">
+              <div class="w-8 h-8 rounded-lg brand-logo flex items-center justify-center opacity-80">
+                <i class="fa-solid fa-cube text-white text-xs"></i>
+              </div>
+              <span>© ${currentYear} ${CONFIG.brand} · Tüm hakları saklıdır.</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button id="open-rules-btn" class="hover:text-blue-400 transition-colors">Kurallar</button>
+              <a href="${CONFIG.vote}" target="_blank" rel="noopener" class="hover:text-blue-400 transition-colors">Oy Ver</a>
+              <a href="${CONFIG.discord}" target="_blank" rel="noopener" class="hover:text-blue-400 transition-colors text-lg"><i class="fa-brands fa-discord"></i></a>
+            </div>
+          </div>
+        `;
+      }
+
+      function buildLauncherOptions() {
+        const container = document.getElementById('launcher-options-container');
+        const osNames = { windows: 'Windows', linux: 'Linux', mac: 'macOS' };
+        const osIcons = { windows: 'fa-brands fa-windows', linux: 'fa-brands fa-linux', mac: 'fa-brands fa-apple' };
+
+        container.innerHTML = Object.entries(LAUNCHER_CONFIG).map(([os, data]) => {
+          const isLocked = !data.available;
+          return `
+            <div class="launcher-option ${isLocked ? 'locked' : ''}" data-os="${os}">
+              <div class="launcher-icon ${data.color}">
+                <i class="${osIcons[os]}"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-base font-bold text-white">${osNames[os]} Sürümü</h4>
+                <p class="text-xs text-slate-400 mt-1 font-medium">${isLocked ? 'Henüz kullanılamıyor' : 'İndirmek için tıkla'}</p>
+              </div>
+              <span class="launcher-badge ${isLocked ? 'locked-badge' : 'available'}">
+                ${isLocked ? 'Kilitli' : 'İndir'}
+              </span>
+              ${isLocked ? `
+                <div class="launcher-lock-overlay">
+                  <i class="fa-solid fa-lock text-slate-500 text-2xl"></i>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      function copyIp(btnEl) {
+        navigator.clipboard.writeText(CONFIG.ip).then(() => {
+          if (btnEl) {
+            if(btnEl.tagName === 'I') {
+              const originalClasses = btnEl.className;
+              btnEl.className = 'fa-solid fa-check text-emerald-400 cursor-pointer';
+              setTimeout(() => { btnEl.className = originalClasses; }, 1500);
+            } else {
+              const icon = btnEl.querySelector('i');
+              if (icon) {
+                const originalClasses = icon.className;
+                icon.className = 'fa-solid fa-check text-emerald-400';
+                setTimeout(() => { icon.className = originalClasses; }, 1500);
+              }
+            }
+          }
+        }).catch(() => {
+          alert('Sunucu IP: ' + CONFIG.ip);
+        });
+      }
+
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] bg-slate-900/95 backdrop-blur-xl border border-blue-500/40 text-white px-8 py-4 rounded-full shadow-2xl text-sm font-bold tracking-wide animate-in flex items-center gap-3';
+        toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.transition = 'opacity 0.4s, transform 0.4s';
+          toast.style.opacity = '0';
+          toast.style.transform = 'translate(-50%, 20px)';
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
+      }
+
+      function openLauncher() {
+        buildLauncherOptions();
+        const modal = document.getElementById('launcher-modal');
+        modal.classList.remove('hidden');
+        document.documentElement.style.overflow = 'hidden';
+      }
+
+      function closeLauncher() {
+        const modal = document.getElementById('launcher-modal');
+        modal.classList.add('hidden');
+        document.documentElement.style.overflow = '';
+      }
+
+      function handleAction(action, element) {
+        switch (action) {
+          case 'play':
+          case 'join':
+            openLauncher();
+            break;
+          case 'copy-ip':
+            copyIp(element);
+            showToast('IP kopyalandı!');
+            break;
+          case 'home':
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+          case 'vote':
+            window.open(CONFIG.vote, '_blank', 'noopener');
+            break;
+        }
+      }
+
+      function bindEvents() {
+        const rulesModal = document.getElementById('rules-modal');
+        const closeRulesBtn = document.getElementById('close-rules-btn');
+        const acceptRulesBtn = document.getElementById('accept-rules-btn');
+
+        const launcherModal = document.getElementById('launcher-modal');
+        const closeLauncherBtn = document.getElementById('close-launcher-btn');
+
+        function openRules() {
+          rulesModal.classList.remove('hidden');
+          document.documentElement.style.overflow = 'hidden';
+        }
+
+        function closeRules() {
+          rulesModal.classList.add('hidden');
+          document.documentElement.style.overflow = '';
+        }
+
+        closeRulesBtn.addEventListener('click', closeRules);
+        acceptRulesBtn.addEventListener('click', closeRules);
+        rulesModal.addEventListener('click', (e) => {
+          if (e.target === rulesModal) closeRules();
+        });
+
+        closeLauncherBtn.addEventListener('click', closeLauncher);
+        launcherModal.addEventListener('click', (e) => {
+          if (e.target === launcherModal) closeLauncher();
+        });
+
+        document.addEventListener('click', function (e) {
+          const launcherOption = e.target.closest('.launcher-option');
+          if (launcherOption && !launcherOption.classList.contains('locked')) {
+            const os = launcherOption.dataset.os;
+            const url = LAUNCHER_CONFIG[os].url;
+            if (url && url !== '#') {
+              window.open(url, '_blank', 'noopener');
+            } else {
+              showToast('İndirme bağlantısı henüz eklenmedi!');
+            }
+            return;
+          }
+
+          if (e.target.closest('#open-rules-btn')) {
+            e.preventDefault();
+            openRules();
+            return;
+          }
+
+          const copyIpEl = e.target.closest('[data-copy-ip]');
+          if (copyIpEl) {
+            e.preventDefault();
+            e.stopPropagation();
+            copyIp(copyIpEl);
+            showToast('IP kopyalandı!');
+            return;
+          }
+
+          const actionEl = e.target.closest('[data-action]');
+          if (actionEl) {
+            e.preventDefault();
+            handleAction(actionEl.dataset.action, actionEl);
+            return;
+          }
+
+          const navLink = e.target.closest('[data-nav-action]');
+          if (navLink) {
+            const action = navLink.dataset.navAction;
+            if (action === 'home') {
+              e.preventDefault();
+              handleAction('home', navLink);
+            }
+            return;
+          }
+
+          if (e.target.closest('#mobile-menu-btn')) {
+            e.preventDefault();
+            const nl = document.getElementById('nav-links');
+            nl.classList.toggle('hidden');
+            nl.classList.toggle('flex');
+            nl.classList.toggle('flex-col');
+            nl.classList.toggle('absolute');
+            nl.classList.toggle('top-full');
+            nl.classList.toggle('left-0');
+            nl.classList.toggle('right-0');
+            nl.classList.toggle('bg-slate-950/95');
+            nl.classList.toggle('p-6');
+            nl.classList.toggle('gap-4');
+          }
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            if (!rulesModal.classList.contains('hidden')) closeRules();
+            if (!launcherModal.classList.contains('hidden')) closeLauncher();
+          }
+        });
+      }
+
+      const devtoolsGuard = (function () {
+        let blocked = false;
+        const blockEl = document.getElementById('devtools-block');
+
+        function block() {
+          if (blocked) return;
+          blocked = true;
+          blockEl.classList.remove('hidden');
+          document.body.classList.add('blur-guard');
+          document.documentElement.style.overflow = 'hidden';
+        }
+
+        function checkSize() {
+          const widthThreshold = 160;
+          const heightThreshold = 160;
+          const widthDiff = window.outerWidth - window.innerWidth;
+          const heightDiff = window.outerHeight - window.innerHeight;
+          if (widthDiff > widthThreshold || heightDiff > heightThreshold) {
+            block();
+          }
+        }
+
+        function detectDebugger() {
+          const start = performance.now();
+          debugger;
+          const end = performance.now();
+          if (end - start > 100) {
+            block();
+          }
+        }
+
+        document.addEventListener('keydown', function (e) {
+          if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+            (e.ctrlKey && e.key.toUpperCase() === 'U') ||
+            (e.metaKey && e.altKey && ['I', 'J', 'C'].includes(e.key.toUpperCase()))
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            block();
+            return false;
+          }
+        }, true);
+
+        document.addEventListener('contextmenu', function (e) {
+          e.preventDefault();
+          return false;
+        });
+
+        window.addEventListener('resize', checkSize);
+        setInterval(checkSize, 1000);
+
+        return { block };
+      })();
+
+      function init() {
+        buildNavBrand();
+        buildNavLinks();
+        buildNavMobile();
+        buildHero();
+        buildFeatures();
+        buildCta();
+        buildFooter();
+        bindEvents();
+        
+        fetchServerStatus();
+        setInterval(fetchServerStatus, 60000);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
